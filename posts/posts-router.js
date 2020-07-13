@@ -56,15 +56,23 @@ router.get("/:id/comments", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+    console.log("req.body", req.body)
+    if(!req.body.title || !req.body.contents){
+            res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
+        }
     Helpers.insert(req.body)
     .then(postId =>{
-        if(!req.body.title || !req.body.contents){
-            res.status(400).json({ errorMessage: "Please provide title and contents for the post." })
-        }else{
+        console.log("postid",postId)
+        Helpers.findById(postId.id)
+        .then(post=>{
             res.status(201).json(post)
-        }
+        })
+        .catch(err=>{
+            console.log("error inside helper", err)
+        })
     })
     .catch(err =>{
+        console.log(err)
         res.status(500).json({ error: "There was an error while saving the post to the database" })
     })
 });
