@@ -80,10 +80,13 @@ router.post("/", (req, res) => {
 router.post("/:id/comments", (req, res) => {
     const commentInfo = {
         ...req.body,
-        postId: req.params.id
+        post_id: req.params.id
     }
+    console.log(commentInfo);
     Helpers.insertComment(commentInfo)
+
         .then(comment =>{
+
             if(!commentInfo.text){
                 res.status(400).json({errorMessage: "Please provide text for the comment."})
             }else{
